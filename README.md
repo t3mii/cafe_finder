@@ -47,3 +47,20 @@ Further steps
 -------------
 - Add tests under a `tests/` folder and run `poetry run pytest`.
 - Use `poetry add <package>` to add new dependencies and `poetry lock` to update `poetry.lock`.
+
+OpenStreetMap (Nominatim + Overpass)
+-----------------------------------
+
+This project now includes a lightweight OpenStreetMap helper in `osm_places.py`.
+It geocodes a location with Nominatim and queries Overpass for `amenity=cafe` results.
+
+Usage (Poetry / PowerShell):
+
+```powershell
+poetry run python main.py
+```
+
+Notes:
+- Nominatim and Overpass are shared public services and enforce rate limits. The code uses a small delay when geocoding. For heavy usage register your own instance or use a commercial provider.
+- Overpass returns nodes, ways, or relations. The helper normalizes results and returns lat/lon where available.
+
