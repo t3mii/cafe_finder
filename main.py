@@ -1,5 +1,36 @@
 import os
 from dotenv import load_dotenv
+from flask import Flask, render_template, jsonify
+import overpy
+
+app = Flask(__name__)
+api = overpy.Overpass()
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/cafes")
+def get_cafes():
+    result = api.query("""
+      node
+        ["amenity"="cafe"]
+        (around:1000,38.9807,-76.9368);  // College Park
+      out;
+    """)
+    cafes = [
+        {
+            "name": node.tags.get("name", "Unnamed Café"),
+            "lat": node.lat,
+            "lng": node.lon
+        }
+        for node in result.nodes
+    ]
+    return jsonify(cafes)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
 load_dotenv()
 
